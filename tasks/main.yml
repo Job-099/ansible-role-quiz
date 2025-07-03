@@ -1,7 +1,3 @@
----
-# tasks file for ansible-role-quiz
-
----
 - name: Installer les dépendances système sur Debian/Ubuntu
   apt:
     name:
