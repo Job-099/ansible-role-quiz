@@ -1,7 +1,7 @@
 galaxy_info:
-  author: Dexteria78
+  author: Job-099
   role_name: quiz
-  namespace: Dexteria78
+  namespace: Job-099
   description: Déploiement de l'application Node.js quiz-ansible
   license: MIT
   min_ansible_version: 2.9
