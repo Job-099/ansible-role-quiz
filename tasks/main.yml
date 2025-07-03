@@ -1,41 +1,20 @@
-- name: Installer les dépendances système sur Debian/Ubuntu
-  apt:
-    name:
-      - git
-      - curl
-    state: present
-    update_cache: yes
-  when: ansible_os_family in ["Debian","Ubuntu"]
-
-- name: Installer les dépendances système sur RedHat/Rocky
+- name: Mettre à jour tous les paquets
   dnf:
-    name:
-      - git
-      - curl
+    name: "*"
+    state: latest
+  when: ansible_os_family == "RedHat"
+
+- name: Installer git
+  dnf:
+    name: git
     state: present
   when: ansible_os_family == "RedHat"
 
-- name: Ajouter le dépôt NodeSource (Debian/Ubuntu)
-  shell: curl -fsSL https://deb.nodesource.com/setup_23.x | bash -
-  when: ansible_os_family == "Ubuntu"
-
-- name: Installer Node.js sur Debian/Ubuntu
-  apt:
-    name: nodejs
-    state: present
-  when: ansible_os_family == "Ubuntu"
-
-- name: Installer npm sur Debian/Ubuntu
-  apt:
-    name: npm
-    state: present
-  when: ansible_os_family in ["Debian","Ubuntu"]
-
-- name: Ajouter le dépôt NodeSource (RedHat/Rocky)
+- name: Ajouter le dépôt NodeSource
   shell: curl -fsSL https://rpm.nodesource.com/setup_23.x | bash -
   when: ansible_os_family == "RedHat"
 
-- name: Installer Node.js sur RedHat/Rocky
+- name: Installer Node.js
   dnf:
     name: nodejs
     state: present
@@ -46,32 +25,29 @@
     repo: https://github.com/franklin-tutorials/quiz-ansible.git
     dest: /opt/quiz-ansible
     version: main
+    force: true
+  when: ansible_os_family == "RedHat"
 
 - name: Installer les dépendances Node.js
   npm:
     path: /opt/quiz-ansible
     production: no
+  when: ansible_os_family == "RedHat"
 
 - name: Construire l'application
   shell: npm run build
   args:
     chdir: /opt/quiz-ansible
+  when: ansible_os_family == "RedHat"
 
 - name: Installer serve en global
   npm:
     name: serve
-    global: yes
+    global: true
+  when: ansible_os_family == "RedHat"
 
 - name: Lancer l'application (serve)
   shell: nohup serve -s dist &
   args:
     chdir: /opt/quiz-ansible
-
-- name: Vérifier la version de npm
-  command: npm --version
-  register: npm_version
-  ignore_errors: true
-
-- name: Afficher la version de npm
-  debug:
-    var: npm_version.stdout
+  when: ansible_os_family == "RedHat"
