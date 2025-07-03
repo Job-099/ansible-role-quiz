@@ -1,0 +1,5 @@
+- name: Déploiement de l’application quiz-ansible via le rôle
+  hosts: all
+  become: true
+  roles:
+    - ansible-role-quiz
