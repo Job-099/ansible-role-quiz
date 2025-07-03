@@ -17,9 +17,7 @@
 
 - name: Ajouter le dépôt NodeSource (Debian/Ubuntu)
   shell: curl -fsSL https://deb.nodesource.com/setup_23.x | bash -
-  args:
-    warn: false
-  when: ansible_os_family in ["Debian","Ubuntu"]
+  when: ansible_os_family == "Ubuntu"
 
 - name: Installer Node.js sur Debian/Ubuntu
   apt:
@@ -29,12 +27,10 @@
 
 - name: Ajouter le dépôt NodeSource (RedHat/Rocky)
   shell: curl -fsSL https://rpm.nodesource.com/setup_23.x | bash -
-  args:
-    warn: false
   when: ansible_os_family == "RedHat"
 
 - name: Installer Node.js sur RedHat/Rocky
-  yum:
+  dnf:
     name: nodejs
     state: present
   when: ansible_os_family == "RedHat"
@@ -50,7 +46,7 @@
     path: /opt/quiz-ansible
     production: no
 
-- name: Construire l’application
+- name: Construire l'application
   shell: npm run build
   args:
     chdir: /opt/quiz-ansible
@@ -60,7 +56,7 @@
     name: serve
     global: yes
 
-- name: Lancer l’application (serve)
+- name: Lancer l'application (serve)
   shell: nohup serve -s dist &
   args:
     chdir: /opt/quiz-ansible
