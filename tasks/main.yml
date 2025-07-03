@@ -25,6 +25,12 @@
     state: present
   when: ansible_os_family == "Ubuntu"
 
+- name: Installer npm sur Debian/Ubuntu
+  apt:
+    name: npm
+    state: present
+  when: ansible_os_family in ["Debian","Ubuntu"]
+
 - name: Ajouter le dépôt NodeSource (RedHat/Rocky)
   shell: curl -fsSL https://rpm.nodesource.com/setup_23.x | bash -
   when: ansible_os_family == "RedHat"
@@ -60,3 +66,12 @@
   shell: nohup serve -s dist &
   args:
     chdir: /opt/quiz-ansible
+
+- name: Vérifier la version de npm
+  command: npm --version
+  register: npm_version
+  ignore_errors: true
+
+- name: Afficher la version de npm
+  debug:
+    var: npm_version.stdout
