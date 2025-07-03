@@ -39,7 +39,7 @@
   git:
     repo: https://github.com/franklin-tutorials/quiz-ansible.git
     dest: /opt/quiz-ansible
-    version: master
+    version: main
 
 - name: Installer les dépendances Node.js
   npm:
